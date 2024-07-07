@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Home() {
 
 	return (
-		<div className="flex h-screen max-h-screen">
+		<div className="flex h-screen max-h-screen ">
 			{/* TODO OTP Verification | Passkey code*/}
 
 			<section className="remove-scrollbar container my-auto">
@@ -15,7 +15,7 @@ export default function Home() {
 						height={1000}
 						width={1000}
 						alt="patient"
-						className="mb-12 w-fit"
+						className="mb-12 h-10 w-fit"
 					/>
 					<PatientForm />
 					<div className="text-regular-14 mt-10 flex justify-between ">
