@@ -52,7 +52,7 @@ const RenderInputField = ({ field, props }: { field: any; props: IProps }) => {
    const [selectValue, setSelectValue] = useState("");
 
    const handleValueChange = (value: any) => {
-      console.log(value);
+      
       field.onChange(value);
       setSelectValue(value);
    };

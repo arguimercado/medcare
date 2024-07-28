@@ -6,7 +6,7 @@ export const {
     NEXT_PUBLIC_DATABASE_ID: DATABASE_ID,
     NEXT_PUBLIC_PATIENT_COLLECTION_ID:PATIENT_COLLECTION_ID ,
     NEXT_PUBLIC_DOCTOR_COLLECTION_ID,
-    NEXT_PUBLIC_APPOINTMENT_COLLECTION_ID,
+    NEXT_PUBLIC_APPOINTMENT_COLLECTION_ID: APPOINTMENT_COLLECTION_ID,
     NEXT_PUBLIC_BUCKET_ID: BUCKET_ID,
   } = process.env;
 
@@ -20,6 +20,6 @@ export const {
   export const messaging = new sdk.Messaging(client);
   export const storage = new sdk.Storage(client);
 
-  console.log(client);
+
 
 

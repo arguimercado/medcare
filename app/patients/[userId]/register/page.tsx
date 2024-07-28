@@ -1,5 +1,4 @@
 
-import FormTesting from "@/components/forms/FormTesting";
 import RegisterForm from "@/components/forms/RegisterForm";
 import { getUser } from "@/lib/actions/patient.action";
 
