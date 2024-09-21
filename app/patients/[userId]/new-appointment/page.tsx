@@ -3,8 +3,6 @@ import { getPatient } from "@/lib/actions/patient.action";
 import Image from "next/image";
 import React from "react";
 
-
-
 const NewAppointment = async ({params: {userId}} : SearchParamProps) => {
    
    const patient = await getPatient(userId);

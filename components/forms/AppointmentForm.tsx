@@ -23,7 +23,8 @@ interface IProps {
    patientId: string;
    type: "create" | "schedule" | "cancel";
    appointment?: Appointment;
-   setOpen?: Dispatch<SetStateAction<boolean>>
+   setOpen?: Dispatch<SetStateAction<boolean>>;
+   dialogMode?: boolean
 }
 
 
@@ -51,11 +52,11 @@ const useAppointmentForm = (options: IProps) => {
    const form = useForm<z.infer<typeof AppointmentFormValidation>>({
       resolver: zodResolver(AppointmentFormValidation),
       defaultValues: {
-         primaryPhysician: "",
-         schedule: new Date(),
-         reason: "",
-         note: "",
-         cancellationReason: ""
+         primaryPhysician: options.appointment ? options.appointment.primaryPhysician : "",
+         schedule: options.appointment ?  new Date(options.appointment.schedule) : new Date(),
+         reason: options.appointment ? options.appointment.reason : "",
+         note: options.appointment ? options.appointment.note : "",
+         cancellationReason: options.appointment?.cancellationReason || ""
       },
    });
 
@@ -75,7 +76,7 @@ const useAppointmentForm = (options: IProps) => {
                status: status as Status,
                note: values.note,
             };
-            console.log(appointment);
+            
             const newAppointment = await createAppointment(appointment);
 
             if (newAppointment) {
@@ -84,6 +85,26 @@ const useAppointmentForm = (options: IProps) => {
                   `/patients/${options.userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
                );
             }
+         }
+         else {
+            const appointmentToUpdate = {
+               userId: options.userId,
+               appointmentId: options.appointment?.$id!,
+               appointment: {
+                  primaryPhysician: values?.primaryPhysician,
+                  schedule: new Date(values?.schedule),
+                  status: status as Status,
+                  cancellationReason: values?.cancellationReason 
+               },
+               type: options.type
+            }
+
+            const updatedAppointment = await updateAppointment(appointmentToUpdate);
+            if(updatedAppointment) {
+               options.setOpen && options.setOpen(false);
+               form.reset();
+            }
+
          }
       } catch (error: any) {
 
@@ -99,16 +120,12 @@ const useAppointmentForm = (options: IProps) => {
    }
 }
 
-const AppointmentForm = ({ userId, patientId, type, appointment,setOpen }: IProps) => {
+const AppointmentForm = (props: IProps) => {
    
-   const {handleSubmit,form,isLoading} = useAppointmentForm({
-      userId,
-      patientId,
-      type,
-      appointment,
-      setOpen
-   });
-   
+
+   const {handleSubmit,form,isLoading} = useAppointmentForm(props);
+   const { type, dialogMode} = props;
+
 
    let buttonLabel = "";
    if (type === "cancel") buttonLabel = "Cancel Appointment";
@@ -120,10 +137,10 @@ const AppointmentForm = ({ userId, patientId, type, appointment,setOpen }: IProp
          <form
             onSubmit={form.handleSubmit(handleSubmit)} 
             className="flex-1 space-y-12">
-            <section className="space-y-4">
+            {type === 'create'  && <section className="space-y-4">
                <h1 className="header">New Appointment</h1>
                <p className="text-dark-700">Request new Appointment</p>
-            </section>
+            </section>}
             {type !== "cancel" && (
                <>
                   <CustomFormField
@@ -156,7 +173,7 @@ const AppointmentForm = ({ userId, patientId, type, appointment,setOpen }: IProp
                      showTimeSelect
                      dateFormat="MM/dd/yyyy - h:mm aa"
                   />
-                  <div className="flex flex-row gap-6">
+                  <div className={`flex ${dialogMode ? "flex-col" : "flex-row gap-6"}`}>
                      <CustomFormField
                         fieldType={FormFieldType.TEXTAREA}
                         control={form.control}

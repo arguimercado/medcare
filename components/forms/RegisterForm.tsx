@@ -29,6 +29,7 @@ import FileUploader from "../FileUploader";
 import { registerPatient } from "@/lib/actions/patient.action";
 
 const RegisterForm = ({ user }: { user: User }) => {
+
    const router = useRouter();
    const [isLoading, setIsLoading] = useState(false);
 
@@ -67,7 +68,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             birthDate: new Date(values.birthDate),
             identificationDocument: formData ?? undefined,
          };
-
+         
         //@ts-ignore
         const newPatient = await registerPatient(patientData);
 

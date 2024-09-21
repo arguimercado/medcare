@@ -37,7 +37,7 @@ const PatientForm = () => {
             email,
             phone
          }
-
+         console.log(userData);
          const user = await createUser(userData);
       
          if(user)
@@ -86,7 +86,6 @@ const PatientForm = () => {
                name="phone"
                label="Phone number"
                placeholder="(555) 123-4567"
-              
             />
             <SubmitButton 
                isLoading={isLoading}>Get Started</SubmitButton>
